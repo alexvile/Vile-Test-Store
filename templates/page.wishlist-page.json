@@ -11,13 +11,30 @@
   "sections": {
     "main": {
       "type": "main-page",
+      "disabled": true,
       "settings": {
         "padding_top": 28,
         "padding_bottom": 28
       }
+    },
+    "173704397676a46461": {
+      "type": "apps",
+      "blocks": {
+        "swishlist_simple_wishlist_wishlist_page_wyNL34": {
+          "type": "shopify://apps/swishlist-simple-wishlist/blocks/wishlist_page/bfcb80f2-f00d-42ae-909a-9f00c726327b",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "swishlist_simple_wishlist_wishlist_page_wyNL34"
+      ],
+      "settings": {
+        "include_margins": true
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "173704397676a46461"
   ]
 }
