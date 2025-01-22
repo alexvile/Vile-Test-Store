@@ -2,11 +2,11 @@
   class Wishlist {
     constructor() {
       this.storageKey = "abrio_wl_items";
-      this.apiEndpoint = window.routes.root_url + "apps/wishlist";
+      this.apiEndpoint = window.abrwl.root_url + "apps/wishlist";
 
       //   todo - token for guest to save after logged in
       //   this.guestToken = ...
-      this.customerId = window.customerId;
+      this.customerId =  window.abrwl.customerId;
       this.isAuthenticated = !!this.customerId;
 
       //   this.items = this.loadItems();
@@ -36,9 +36,6 @@
 
     async addItem(productId) {
       if (!this.items.includes(productId)) {
-        this.items.push(productId);
-        this.saveItems();
-        this.dispatchEvent("wishlist:add", { productId });
 
         if (this.isAuthenticated) {
           try {
@@ -54,6 +51,10 @@
             console.error("Error adding item to API wishlist:", error);
           }
         }
+        
+        this.items.push(productId);
+        this.saveItems();
+        this.dispatchEvent("wishlist:add", { productId });
       }
     }
 

@@ -1,3 +1,8 @@
+<script>
+  window.abrwl.customerId = '{{ customer.id }}'
+  window.abrwl.root_url: '{{ routes.root_url }}',
+</script>
+
 <style>
   .abr-wl-button {
     cursor: pointer;
@@ -18,7 +23,6 @@
 <button type="button" class="abr-wl-button" abr-wl-button data-product-id="{{ product.id }}"></button>
 
 {% comment %} todo - add aria-label {% endcomment %}
-
 
 {% comment %}
    1. check localstorage before drawing
