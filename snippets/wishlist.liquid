@@ -1,26 +1,37 @@
-<button type="button" id="getwl">Get wishlist</button>
-<script>
-  const btn = document.getElementById('getwl');
-  btn.addEventListener('click', async () => {
-    const res = await fetch('https://vile-test-store.myshopify.com/apps/wishlist');
-    console.log(res);
-    const json = await res.json();
-    console.log(json);
-  });
-</script>
+<style>
+  .abr-wl-button {
+    cursor: pointer;
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    border: 1px solid black;
+    border-radius: 50%;
+  }
+  .abr-wl-button.awl-is-added {
+    background-color: #000;
+  }
+</style>
+{% comment %} base styling in separate css {% endcomment %}
 
-<button type="button" id="getwlgg">G1et wishlist by id "MTczNzQ2ODE5MjI0NQ"</button>
-<script>
-  const btn2 = document.getElementById('getwlgg');
-  btn2.addEventListener('click', async () => {
-    console.log('start');
-    const res = await fetch('https://vile-test-store.myshopify.com/apps/wishlist/list/MTczNzQ2ODE5MjI0NQ');
-    console.log(res);
-    const json = await res.json();
-    console.log(json);
-  });
-</script>
-{% comment %} \todo use form {% endcomment %}
+<button type="button" onclick="window.wl.fetchWishlist()">Get wishlist</button>
+<button type="button" onclick="window.wl.fetchListById('MTczNzQ2ODE5MjI0NQ')">Get selected list items</button>
+<button type="button" class="abr-wl-button" abr-wl-button data-product-id="{{ product.id }}"></button>
+
+{% comment %} todo - add aria-label {% endcomment %}
+
+
+{% comment %}
+   1. check localstorage before drawing
+    1) if empty wl - don't use the list id
+    2) if only 1 list - we add id under the hood
+    3) if a few lists - show the popup
+
+  2. Style button by classlist
+
+  3. Use only 1 wishlist for now
+{% endcomment %}
+
+{% comment %} todo use form {% endcomment %}
 <form id="myForm" method="post">
   Variant id to ADD
   <input type="text" name="variantId" id="variantId">
@@ -87,3 +98,5 @@ const variantId = '8571553939705'
       });
   });
 </script>
+
+<script src="{{ 'wishlist-main.js' | asset_url }}" defer="defer"></script>
