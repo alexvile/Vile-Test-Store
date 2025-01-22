@@ -1,0 +1,89 @@
+<button type="button" id="getwl">Get wishlist</button>
+<script>
+  const btn = document.getElementById('getwl');
+  btn.addEventListener('click', async () => {
+    const res = await fetch('https://vile-test-store.myshopify.com/apps/wishlist');
+    console.log(res);
+    const json = await res.json();
+    console.log(json);
+  });
+</script>
+
+<button type="button" id="getwlgg">G1et wishlist by id "MTczNzQ2ODE5MjI0NQ"</button>
+<script>
+  const btn2 = document.getElementById('getwlgg');
+  btn2.addEventListener('click', async () => {
+    console.log('start');
+    const res = await fetch('https://vile-test-store.myshopify.com/apps/wishlist/list/MTczNzQ2ODE5MjI0NQ');
+    console.log(res);
+    const json = await res.json();
+    console.log(json);
+  });
+</script>
+{% comment %} \todo use form {% endcomment %}
+<form id="myForm" method="post">
+  Variant id to ADD
+  <input type="text" name="variantId" id="variantId">
+  <button type="submit">Submit</button>
+</form>
+<script>
+  document.getElementById('myForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target); 
+    const dataObject = Object.fromEntries(formData.entries());
+    {% comment %} add here wishlist id or add query params {% endcomment %}
+    console.log(dataObject)
+    {% comment %} const variantId = formData.get('variantId'); {% endcomment %}
+    
+const variantId = '8571553939705'
+
+    fetch(`https://vile-test-store.myshopify.com/apps/wishlist/product/${variantId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataObject),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Response:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  });
+</script>
+
+<form id="myForm1" method="post">
+  Add to current wishlist '8571553939705'
+  <button type="submit">Submit</button>
+</form>
+<script>
+  document.getElementById('myForm1').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    {% comment %} const formData = new FormData(event.target); 
+    const dataObject = Object.fromEntries(formData.entries()); {% endcomment %}
+    {% comment %} add here wishlist id or add query params {% endcomment %}
+    {% comment %} console.log(123123, dataObject) {% endcomment %}
+    {% comment %} const variantId = formData.get('variantId'); {% endcomment %}
+    
+    const variantId = '8571553939705'
+
+    fetch(`https://vile-test-store.myshopify.com/apps/wishlist/product/${variantId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ listId: "MTczNzQ2ODE5MjI0NQ" }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Response:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  });
+</script>
