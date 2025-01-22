@@ -1,8 +1,9 @@
 <script>
-  window.abrwl.customerId = '{{ customer.id }}'
-  window.abrwl.root_url: '{{ routes.root_url }}',
+  window.abrwl = {
+    customerId: '{{ customer.id }}',
+    root_url: '{{ routes.root_url }}',
+  };
 </script>
-
 <style>
   .abr-wl-button {
     cursor: pointer;
