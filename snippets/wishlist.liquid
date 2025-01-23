@@ -18,6 +18,13 @@
   }
 </style>
 
+{% comment %} page base setupe {% endcomment %}
+<style>
+  .abrwl-page {
+    min-height: 300px;
+  }
+</style>
+
 <div>Current:<span class="abr-wl-count" abr-wl-count>0</span></div>
 {% comment %} base styling in separate css {% endcomment %}
 
@@ -37,6 +44,20 @@
 
   3. Use only 1 wishlist for now
 {% endcomment %}
+
+<div class="abrwl-page" id="abrwl-page">
+  WL page
+  <nav class="wishlists">
+    Wishlists
+    <ul>
+
+    </ul>
+  </nav>
+  <ul class="abrwl-page__list">
+    Products
+
+  </ul>
+</div>
 
 <script src="{{ 'abrwl-main.js' | asset_url }}" defer="defer"></script>
 
