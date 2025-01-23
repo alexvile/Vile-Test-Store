@@ -17,6 +17,8 @@
     background-color: #000;
   }
 </style>
+
+<div>Current:<span class="abr-wl-count" abr-wl-count>0</span></div>
 {% comment %} base styling in separate css {% endcomment %}
 
 <button type="button" onclick="window.wl.getRemoteWishlist()">Get wishlist</button>
@@ -36,4 +38,7 @@
   3. Use only 1 wishlist for now
 {% endcomment %}
 
-<script src="{{ 'wishlist-main.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'abrwl-main.js' | asset_url }}" defer="defer"></script>
+
+{% comment %} page script will be inserted using APP block  {% endcomment %}
+<script src="{{ 'abrwl-page.js' | asset_url }}" defer="defer"></script>

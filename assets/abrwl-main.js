@@ -13,7 +13,9 @@
       this.isAuthenticated = !!this.customerId;
 
       this.isLoading = true;
+      this.countEl = document.querySelector("[abr-wl-count]");
 
+      this.count = 0;
       this.wishlist = [];
       this.products = [];
       this.init();
@@ -49,6 +51,7 @@
         if (response.ok) {
           const data = await response.json();
           return data || { wishlist: [], count: 0 };
+          // todo - remove default values?
         } else {
           console.error("Failed to fetch wishlist from API");
           return { wishlist: [], count: 0 };
@@ -74,10 +77,9 @@
         );
         if (response.ok) {
           const json = await response.json();
-          console.log("Successfull added, dispatch + analytics");
+          console.log("Successfull added");
           return { success: true, data: json };
         } else {
-          // todo - unchecl button - optimistic UI
           console.error("Failed to add to remote wishlist");
           return { success: false, data: null };
         }
@@ -98,11 +100,9 @@
             credentials: "same-origin",
           }
         );
-        console.log(response);
         if (response.ok) {
           const json = await response.json();
-          console.log(121312, json);
-          console.log("Successfull deleted, dispatch + analytics");
+          console.log("Successfull deleted");
           return { success: true, data: json };
         } else {
           // todo - unchecl button - optimistic UI
@@ -121,13 +121,15 @@
       if (!data) return;
       const { count, wishlist } = data;
       localStorage.setItem(this.storageKey, JSON.stringify(data));
+      // todo - make a getter and WATCH for the count and wishlist
+      this.updateCount(count);
       this.count = count;
       this.wishlist = wishlist;
     }
 
     async getRemoteWishlist() {
       const data = await this.fetchWislistAPI();
-      console.log(11212, data);
+      console.log(data);
       if (!data) return;
       localStorage.setItem(this.storageKey, JSON.stringify(data));
       this.wishlist = data.wishlist;
@@ -161,17 +163,17 @@
     }
 
     async loadWishlist() {
-      const storedItems = JSON.parse(
-        localStorage.getItem(this.storageKey)
-      )?.wishlist;
-      const shouldBeUpdated = !storedItems || storedItems.length === 0;
+      const storedItems =
+        JSON.parse(localStorage.getItem(this.storageKey)) || {};
+      const { wishlist = [], count = 0 } = storedItems;
 
-      if (this.isAuthenticated && shouldBeUpdated) {
+      const shouldBeUpdated = this.isAuthenticated && !count;
+
+      if (shouldBeUpdated) {
         await this.getRemoteWishlist();
       } else {
-        // only for guest
-        // const totalProductIds = list.reduce((count, item) => count + item.product_ids.length, 0);
-        this.wishlist = storedItems || [];
+        this.wishlist = wishlist;
+        this.count = count;
       }
     }
 
@@ -182,10 +184,12 @@
 
       if (this.isAuthenticated) {
         const { success, data } = await this.addProductAPI(productId, listId);
+        console.log("addResp", data);
 
         if (success) {
           this.updateWishlist(data);
           this.dispatchEvent("wishlist:add", { productId });
+          console.log("analytics added");
         }
         return success;
       } else {
@@ -203,9 +207,11 @@
 
       if (this.isAuthenticated) {
         const { success, data } = await this.removeProductAPI(productId);
+        console.log("removeResp", data);
         if (success) {
           this.updateWishlist(data);
           this.dispatchEvent("wishlist:remove", { productId });
+          console.log("analytics removed");
         }
         return success;
       } else {
@@ -250,9 +256,17 @@
 
     // await this.loadFirstPopulatedList();
 
+    updateCount(newValue) {
+      // todo - refactor
+      if (!this.countEl || !newValue) return;
+      this.countEl.textContent = newValue;
+    }
     firstLoad() {
       // add loading state
+
+      this.updateCount(this.count);
       const allBtns = document.querySelectorAll("[abr-wl-button]");
+
       allBtns.forEach((node) => {
         const productId = node.getAttribute("data-product-id");
         if (this.isInWishlist(productId)) {
@@ -334,21 +348,3 @@
   const abrio_wishlist = new Wishlist();
   window.wl = abrio_wishlist;
 })();
-
-//   const mockWL = [
-//     {
-//       title: "Main",
-//       id: "MTczNzQ2ODE5MjI0NQ",
-//       product_ids: ["8571553939705"],
-//     },
-//   ];
-//  localStorage.setItem('abrio_wl_data', JSON.stringify(mockWL));
-
-//   const mockPr = [
-//     {
-//       id: "8571553939705",
-//       title: "TIMBERLAND | MENS 6 INCH PREMIUM BOOT",
-//       handle: "timberland-mens-6-inch-premium-boot",
-//     },
-//   ];
-//   localStorage.setItem('abrio_wl_cache', JSON.stringify(mockPr));
