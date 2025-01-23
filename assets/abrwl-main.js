@@ -129,37 +129,11 @@
 
     async getRemoteWishlist() {
       const data = await this.fetchWislistAPI();
-      console.log(data);
+      // console.log(data);
       if (!data) return;
       localStorage.setItem(this.storageKey, JSON.stringify(data));
       this.wishlist = data.wishlist;
       this.count = data.count;
-    }
-
-    async loadFirstPopulatedList() {
-      if (!this.wishlist || !this.wishlist.length) return;
-
-      const cachedProducts = JSON.parse(localStorage.getItem(this.cacheKey));
-      const firstWLProducts = this.wishlist[0]?.product_ids;
-
-      if (!firstWLProducts?.length) return;
-
-      const cacheIsEmpty = !cachedProducts || !cachedProducts.length;
-
-      const allElementsExist = cacheIsEmpty
-        ? false
-        : firstWLProducts.every((item) =>
-            cachedProducts.some((element) => element.id === item)
-          );
-
-      if (this.isAuthenticated && (cacheIsEmpty || !allElementsExist)) {
-        // fetch product via API and spread them
-      } else {
-        console.log("take from cache");
-        // push
-        // or use fetch
-        this.products = cachedProducts || [];
-      }
     }
 
     async loadWishlist() {
@@ -188,7 +162,7 @@
 
         if (success) {
           this.updateWishlist(data);
-          this.dispatchEvent("wishlist:add", { productId });
+          this.dispatchEvent("abrwl:add", { productId });
           console.log("analytics added");
         }
         return success;
@@ -210,7 +184,7 @@
         console.log("removeResp", data);
         if (success) {
           this.updateWishlist(data);
-          this.dispatchEvent("wishlist:remove", { productId });
+          this.dispatchEvent("abrwl:remove", { productId });
           console.log("analytics removed");
         }
         return success;
@@ -222,27 +196,6 @@
         return true;
       }
     }
-
-    // async fetchListById(id) {
-    //   if (!id) return;
-    //   try {
-    //     const response = await fetch(`${this.apiEndpoint}/list/${id}`, {
-    //       method: "GET",
-    //       credentials: "same-origin",
-    //     });
-    //     if (response.ok) {
-    //       const data = await response.json();
-    //       console.log(data);
-    //       return data.items || [];
-    //     } else {
-    //       console.error("Failed to fetch wishlist from API");
-    //       return [];
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching wishlist:", error);
-    //     return [];
-    //   }
-    // }
 
     isInWishlist(productId) {
       if (!productId || !this.wishlist?.length) return;
@@ -261,6 +214,7 @@
       if (!this.countEl || !newValue) return;
       this.countEl.textContent = newValue;
     }
+
     firstLoad() {
       // add loading state
 
@@ -281,8 +235,10 @@
       //   or
       this.firstLoad();
       this.attachListeners();
+      this.dispatchEvent("abrwl:initialized");
     }
 
+    // todo - optimistic UI for counter
     attachListeners() {
       document.body.addEventListener("click", async (e) => {
         const button = e.target.closest("[abr-wl-button]");
