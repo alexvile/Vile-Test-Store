@@ -28,8 +28,6 @@
 <div>Current:<span class="abr-wl-count" abr-wl-count>0</span></div>
 {% comment %} base styling in separate css {% endcomment %}
 
-<button type="button" onclick="window.wl.getRemoteWishlist()">Get wishlist</button>
-<button type="button" onclick="window.wl.fetchListById('MTczNzQ2ODE5MjI0NQ')">Get selected list items</button>
 <button type="button" class="abr-wl-button" abr-wl-button data-product-id="{{ product.id }}"></button>
 
 {% comment %} todo - add aria-label {% endcomment %}
@@ -47,21 +45,14 @@
 
 <div class="abrwl-page" id="abrwl-page">
   WL page
-  <nav class="wishlists" id="abrwl-lists-nav">
-    Wishlists
-   
-  </nav>
+  <nav class="wishlists" id="abrwl-lists-nav">Wishlists</nav>
   <ul class="abrwl-page__list">
     Products
-
   </ul>
 </div>
-
-
 
 <script src="{{ 'abrwl-page.js' | asset_url }}" defer="defer"></script>
 
 <script src="{{ 'abrwl-main.js' | asset_url }}" defer="defer"></script>
 
 {% comment %} page script will be inserted using APP block  {% endcomment %}
-

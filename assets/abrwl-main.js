@@ -1,6 +1,5 @@
 (function () {
   //   indexedDB
-
   class Wishlist {
     constructor() {
       this.storageKey = "abrio_wl_data";
@@ -21,10 +20,19 @@
       this.init();
     }
 
+    get isLoading() {
+      return this.isLoading;
+    }
+
+    set isLoading(value) {
+      this.onLoadingChange(value);
+    }
+
+    onLoadingChange(isLoading) {
+      console.log("isLoading", isLoading);
+    }
     // use frontend to fecth or backend to fetch ??????
-
     //  1 product only in 1 wishlist
-
     //  optimistic ui
 
     // overrite element (find and remove the same id)
@@ -34,15 +42,14 @@
     // check if all product are in db, if no - resynch - only for authenticated
     // limit 1 wl for guest and 50 products
 
-    // calculateTotal() {
-
-    // }
+    // calculateTotal() for guest { // }
 
     // todo - add loading
 
-    /* *** Remote API services *** */
+    /* *** Remote API *** */
 
     async fetchWislistAPI() {
+      this.isLoading = true;
       try {
         const response = await fetch(`${this.apiEndpoint}`, {
           method: "GET",
@@ -59,10 +66,13 @@
       } catch (error) {
         console.error("Error fetching wishlist:", error);
         return { wishlist: [], count: 0 };
+      } finally {
+        this.isLoading = false;
       }
     }
 
     async addProductAPI(productId, listId) {
+      this.isLoading = true;
       try {
         const response = await fetch(
           `${this.apiEndpoint}/product/${productId}`,
@@ -87,11 +97,12 @@
         console.error("Error adding item to API wishlist:", error);
         return { success: false, data: null };
       } finally {
-        // console.log('stop loading')
+        this.isLoading = false;
       }
     }
 
     async removeProductAPI(productId) {
+      this.isLoading = true;
       try {
         const response = await fetch(
           `${this.apiEndpoint}/product/${productId}`,
@@ -113,29 +124,11 @@
         console.error("Error removing item to API wishlist:", error);
         return { success: false, data: null };
       } finally {
-        // console.log('stop loading')
+        this.isLoading = false;
       }
     }
 
-    updateWishlist(data) {
-      if (!data) return;
-      const { count, wishlist } = data;
-      localStorage.setItem(this.storageKey, JSON.stringify(data));
-      // todo - make a getter and WATCH for the count and wishlist
-      this.updateCount(count);
-      this.count = count;
-      this.wishlist = wishlist;
-    }
-
-    async getRemoteWishlist() {
-      const data = await this.fetchWislistAPI();
-      // console.log(data);
-      if (!data) return;
-      localStorage.setItem(this.storageKey, JSON.stringify(data));
-      this.wishlist = data.wishlist;
-      this.count = data.count;
-    }
-
+    /* *** Services *** */
     async loadWishlist() {
       const storedItems =
         JSON.parse(localStorage.getItem(this.storageKey)) || {};
@@ -144,7 +137,8 @@
       const shouldBeUpdated = this.isAuthenticated && !count;
 
       if (shouldBeUpdated) {
-        await this.getRemoteWishlist();
+        const data = await this.fetchWislistAPI();
+        this.updateWishlist(data);
       } else {
         this.wishlist = wishlist;
         this.count = count;
@@ -197,17 +191,17 @@
       }
     }
 
-    isInWishlist(productId) {
-      if (!productId || !this.wishlist?.length) return;
-      return this.wishlist.some((list) => list.product_ids.includes(productId));
+    updateWishlist(data) {
+      if (!data) return;
+      const { count, wishlist } = data;
+      localStorage.setItem(this.storageKey, JSON.stringify(data));
+      this.updateCount(count);
+      // todo - make a getter and WATCH for the count and wishlist
+      this.count = count;
+      this.wishlist = wishlist;
     }
 
-    dispatchEvent(eventName, detail = {}) {
-      const event = new CustomEvent(eventName, { detail });
-      document.dispatchEvent(event);
-    }
-
-    // await this.loadFirstPopulatedList();
+    /* *** DOM Interactions *** */
 
     updateCount(newValue) {
       // todo - refactor
@@ -215,25 +209,39 @@
       this.countEl.textContent = newValue;
     }
 
-    firstLoad() {
-      // add loading state
-
-      this.updateCount(this.count);
+    updateButtons() {
       const allBtns = document.querySelectorAll("[abr-wl-button]");
-
       allBtns.forEach((node) => {
         const productId = node.getAttribute("data-product-id");
         if (this.isInWishlist(productId)) {
           node.classList.add("awl-is-added");
+        } else {
+          button.classList.remove("awl-is-added");
         }
       });
+    }
+
+    updateDOMElement() {
+      this.updateCount(this.count);
+      this.updateButtons();
+    }
+
+    /* *** UTILS *** */
+    dispatchEvent(eventName, detail = {}) {
+      const event = new CustomEvent(eventName, { detail });
+      document.dispatchEvent(event);
+    }
+
+    isInWishlist(productId) {
+      if (!productId || !this.wishlist?.length) return;
+      return this.wishlist.some((list) => list.product_ids.includes(productId));
     }
 
     async init() {
       await this.loadWishlist();
       //   this.observeDOM();
       //   or
-      this.firstLoad();
+      this.updateDOMElement();
       this.attachListeners();
       this.dispatchEvent("abrwl:initialized");
     }
@@ -286,18 +294,6 @@
       });
 
       this.updateButtons();
-    }
-
-    updateButtons() {
-      const buttons = document.querySelectorAll("[abr-wl-button]");
-      buttons.forEach((button) => {
-        const productId = button.getAttribute("data-product-id");
-        if (this.isInWishlist(productId)) {
-          button.classList.add("awl-is-added");
-        } else {
-          button.classList.remove("awl-is-added");
-        }
-      });
     }
   }
 
