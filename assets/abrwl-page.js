@@ -7,6 +7,7 @@
       this.lists = [];
       this.products = [];
       this.apiEndpoint = "";
+      this.listButtonsEl = [];
       this.init();
     }
 
@@ -111,9 +112,11 @@
         button.textContent = list.title;
         button.dataset.id = list.id;
         container.appendChild(button);
+        this.listButtonsEl.push(button);
       });
       this.listsContainerEl?.appendChild(container);
     }
+    
 
     start() {
       // todo - refactor
@@ -121,6 +124,8 @@
       this.apiEndpoint = window.wl.apiEndpoint;
       this.isAuthenticated = window.wl.isAuthenticated;
       this.renderButtons();
+      // click to the first element to show first list
+      this.listButtonsEl[0]?.click();
     }
 
     init() {
