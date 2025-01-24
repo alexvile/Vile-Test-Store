@@ -46,13 +46,15 @@
 <div class="abrwl-page" id="abrwl-page">
   WL page
   <nav class="wishlists" id="abrwl-lists-nav">Wishlists</nav>
-  <ul class="abrwl-page__list">
+  <div class="abrwl-page__list" id="abrwl-products">
     Products
-  </ul>
+  </div>
 </div>
+{% comment %} page script will be inserted using APP block  {% endcomment %}
 
 <script src="{{ 'abrwl-page.js' | asset_url }}" defer="defer"></script>
 
+{% comment %} main script will be inserted by app block in global settings {% endcomment %}
+
 <script src="{{ 'abrwl-main.js' | asset_url }}" defer="defer"></script>
 
-{% comment %} page script will be inserted using APP block  {% endcomment %}

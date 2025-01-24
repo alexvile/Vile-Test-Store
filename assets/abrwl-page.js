@@ -4,12 +4,16 @@
       this.storageKey = "abrio_wl_data";
       this.cacheKey = "abrio_wl_cache";
       this.listsContainerEl = document.getElementById("abrwl-lists-nav");
+      this.productsWrapperEl = document.getElementById("abrwl-products");
       this.lists = [];
       this.products = [];
       this.apiEndpoint = "";
       this.listButtonsEl = [];
       this.init();
     }
+    // todo - add remove option using wl-main js !
+    
+    // check if it is a wishlist page!!!
 
     /* *** Remote API services *** */
     async fetchListByIdAPI(id) {
@@ -31,8 +35,6 @@
         return { success: false, data: [] };
       }
     }
-
-    // check if it is a wishlist page!!!
 
     updateArray(newArray) {
       const existingArray = [...this.products];
@@ -89,13 +91,38 @@
     }
 
     async clickByButton(e) {
+      // todo - prevent click if current list is selected !!!!!!
+      // todo add lcasslist - active
       const button = e.currentTarget;
       const id = button?.dataset.id;
       if (!id) return;
 
       await this.loadListById(id);
       const products = this.getElementsOfSelectedList(id);
-      // renderCards(products)
+      this.renderCards(products);
+    }
+    renderCard(product) {
+      const { title, price } = product;
+      const card = document.createElement("li");
+      card.innerHTML = `
+      <div>
+        ${title ? `<h3>${title}</h3>` : ""}
+        ${price ? `<p>${price}</p>` : ""}
+      </div>
+    `;
+      return card;
+    }
+
+    renderCards(data) {
+      console.log(761, data);
+      if (!data || !data.length) return;
+      const container = document.createElement("ul");
+      data.forEach((product) => {
+        const card = this.renderCard(product);
+        container.appendChild(card);
+      });
+      console.log(container);
+      this.productsWrapperEl?.replaceChildren(container);
     }
 
     renderButtons() {
@@ -116,7 +143,6 @@
       });
       this.listsContainerEl?.appendChild(container);
     }
-    
 
     start() {
       // todo - refactor

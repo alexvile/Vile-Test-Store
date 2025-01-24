@@ -16,7 +16,6 @@
 
       this.count = 0;
       this.wishlist = [];
-      this.products = [];
       this.init();
     }
 
@@ -30,6 +29,11 @@
 
     onLoadingChange(isLoading) {
       console.log("isLoading", isLoading);
+      if (isLoading) {
+        this.blockAllButtons();
+      } else {
+        this.unblockAllButtons();
+      }
     }
     // use frontend to fecth or backend to fetch ??????
     //  1 product only in 1 wishlist
@@ -143,6 +147,7 @@
         this.wishlist = wishlist;
         this.count = count;
       }
+      this.isLoading = false;
     }
 
     async addItem(productId, listID) {
@@ -195,13 +200,48 @@
       if (!data) return;
       const { count, wishlist } = data;
       localStorage.setItem(this.storageKey, JSON.stringify(data));
-      this.updateCount(count);
+      // maybe save it if smth went wrong to return current value ?
+      // this.updateCount(count);
       // todo - make a getter and WATCH for the count and wishlist
       this.count = count;
       this.wishlist = wishlist;
     }
 
     /* *** DOM Interactions *** */
+
+    async remove(target, productId) {
+      target.classList.remove("awl-is-added");
+      this.updateCount(this.count - 1);
+      const success = await this.removeItem(productId);
+      if (!success) {
+        target.classList.add("awl-is-added");
+        this.updateCount(this.count + 1);
+      }
+    }
+
+    async add(target, productId) {
+      target.classList.add("awl-is-added");
+      this.updateCount(this.count + 1);
+      const success = await this.addItem(productId);
+      if (!success) {
+        target.classList.remove("awl-is-added");
+        this.updateCount(this.count - 1);
+      }
+    }
+
+    blockAllButtons() {
+      const allBtns = document.querySelectorAll("[abr-wl-button]");
+      allBtns.forEach((node) => {
+        node.disabled = true;
+      });
+    }
+
+    unblockAllButtons() {
+      const allBtns = document.querySelectorAll("[abr-wl-button]");
+      allBtns.forEach((node) => {
+        node.disabled = false;
+      });
+    }
 
     updateCount(newValue) {
       // todo - refactor
@@ -216,7 +256,7 @@
         if (this.isInWishlist(productId)) {
           node.classList.add("awl-is-added");
         } else {
-          button.classList.remove("awl-is-added");
+          node.classList.remove("awl-is-added");
         }
       });
     }
@@ -246,24 +286,14 @@
       this.dispatchEvent("abrwl:initialized");
     }
 
-    // todo - optimistic UI for counter
     attachListeners() {
       document.body.addEventListener("click", async (e) => {
         const button = e.target.closest("[abr-wl-button]");
         if (button) {
           const productId = button.getAttribute("data-product-id");
-          if (this.isInWishlist(productId)) {
-            // optimistic UI
-            // todo - refactor
-            button.classList.remove("awl-is-added");
-            const success = await this.removeItem(productId);
-            if (!success) button.classList.add("awl-is-added");
-          } else {
-            // todo - refactor
-            button.classList.add("awl-is-added");
-            const success = await this.addItem(productId);
-            if (!success) button.classList.remove("awl-is-added");
-          }
+          this.isInWishlist(productId)
+            ? this.remove(button, productId)
+            : this.add(button, productId);
         }
       });
     }
