@@ -11,7 +11,6 @@
     }
 
     /* *** Remote API services *** */
-
     async fetchListByIdAPI(id) {
       if (!id) return;
       try {
@@ -34,68 +33,59 @@
 
     // check if it is a wishlist page!!!
 
+    updateArray(newArray) {
+      const existingArray = [...this.products];
+      newArray.forEach((newItem) => {
+        const index = existingArray.findIndex((item) => item.id === newItem.id);
+        if (index !== -1) {
+          existingArray[index] = newItem;
+        } else {
+          existingArray.push(newItem);
+        }
+      });
+      return existingArray;
+    }
+
     updateCache(data) {
       if (!data) return;
-      localStorage.setItem(this.cacheKey, JSON.stringify(data));
       // todo - make a getter and WATCH for the count and wishlist
-      this.products = data;
+      const updatedArray = this.updateArray(data);
+      localStorage.setItem(this.cacheKey, JSON.stringify(updatedArray));
+      this.products = updatedArray;
     }
 
     async loadListById(id) {
       const cachedProducts = JSON.parse(localStorage.getItem(this.cacheKey));
-      console.log(cachedProducts);
+      console.log("cachedProducts", cachedProducts);
       const neededList = this.lists.find((el) => id === el.id);
       if (!neededList || !neededList.product_ids.length) return;
       const cacheIsEmpty = !cachedProducts || !cachedProducts.length;
       const allElementsExist = cacheIsEmpty
         ? false
         : neededList.product_ids.every((item) =>
-            // cachedProducts.some((element) => element.id === item)
-            // todo -refactor
-            cachedProducts.some((element) => element.id.includes(item))
+            cachedProducts.some((element) => element.id === item)
           );
-      console.log(111, allElementsExist);
 
       if (this.isAuthenticated && (cacheIsEmpty || !allElementsExist)) {
-        // fetch product via API and spread them
+        console.log("use fetch");
         const { success, data } = await this.fetchListByIdAPI(id);
         if (success) {
-          // todo update only for unique items
           this.updateCache(data);
         }
       } else {
         console.log("take from cache");
         // push
-        // or use fetch
+        // or use fetch ???
         this.products = cachedProducts || [];
       }
     }
 
-    // async loadFirstPopulatedList() {
-    //   if (!this.wishlist || !this.wishlist.length) return;
-
-    //   const cachedProducts = JSON.parse(localStorage.getItem(this.cacheKey));
-    //   const firstWLProducts = this.wishlist[0]?.product_ids;
-
-    //   if (!firstWLProducts?.length) return;
-
-    //   const cacheIsEmpty = !cachedProducts || !cachedProducts.length;
-
-    //   const allElementsExist = cacheIsEmpty
-    //     ? false
-    //     : firstWLProducts.every((item) =>
-    //         cachedProducts.some((element) => element.id === item)
-    //       );
-
-    //   if (this.isAuthenticated && (cacheIsEmpty || !allElementsExist)) {
-    //     // fetch product via API and spread them
-    //   } else {
-    //     console.log("take from cache");
-    //     // push
-    //     // or use fetch
-    //     this.products = cachedProducts || [];
-    //   }
-    // }
+    getElementsOfSelectedList(id) {
+      const neededList = this.lists.find((el) => el.id === id);
+      if (!neededList?.product_ids?.length) return;
+      const { product_ids: neededElements } = neededList;
+      return this.products.filter((item) => neededElements.includes(item.id));
+    }
 
     async clickByButton(e) {
       const button = e.currentTarget;
@@ -103,6 +93,8 @@
       if (!id) return;
 
       await this.loadListById(id);
+      const products = this.getElementsOfSelectedList(id);
+      // renderCards(products)
     }
 
     renderButtons() {
@@ -135,6 +127,7 @@
       document.addEventListener("abrwl:initialized", (event) => {
         // console.log(event);
         this.start();
+        // this.rtender
       });
     }
   }
