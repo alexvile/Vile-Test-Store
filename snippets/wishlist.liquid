@@ -4,7 +4,7 @@
     root_url: '{{ routes.root_url }}',
   };
 </script>
-<style>
+{% comment %} <style>
   .abr-wl-button {
     cursor: pointer;
     display: inline-flex;
@@ -16,16 +16,16 @@
   .abr-wl-button.awl-is-added {
     background-color: #000;
   }
-</style>
+</style> {% endcomment %}
 
 {% comment %} page base setupe {% endcomment %}
-<style>
+{% comment %} <style>
   .abrwl-page {
     min-height: 300px;
   }
-</style>
+</style> {% endcomment %}
 
-<div>Current:<span class="abr-wl-count" abr-wl-count>0</span></div>
+
 {% comment %} base styling in separate css {% endcomment %}
 
 <button type="button" class="abr-wl-button" abr-wl-button data-product-id="{{ product.id }}"></button>
@@ -43,13 +43,7 @@
   3. Use only 1 wishlist for now
 {% endcomment %}
 
-<div class="abrwl-page" id="abrwl-page">
-  WL page
-  <nav class="wishlists" id="abrwl-lists-nav">Wishlists</nav>
-  <div class="abrwl-page__list" id="abrwl-products">
-    Products
-  </div>
-</div>
+
 {% comment %} page script will be inserted using APP block  {% endcomment %}
 
 <script src="{{ 'abrwl-page.js' | asset_url }}" defer="defer"></script>

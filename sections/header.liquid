@@ -224,6 +224,16 @@
           </localization-form>
         {%- endif -%}
       </div>
+      <div class="wishlist-button-wrapper header__icon">
+        <a href="{{ routes.root_url }}pages/wishlist">
+          <span class="svg-wrapper">
+            {%- render 'icon-heart' -%}
+          </span>
+          <span>
+          <span class="abr-wl-count" abr-wl-count>0</span>
+          </span>
+        </a>
+      </div>
       {% render 'header-search', input_id: 'Search-In-Modal' %}
 
       {%- if shop.customer_accounts_enabled -%}
