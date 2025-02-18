@@ -4,31 +4,9 @@
     root_url: '{{ routes.root_url }}',
   };
 </script>
-{% comment %} <style>
-  .abr-wl-button {
-    cursor: pointer;
-    display: inline-flex;
-    width: 28px;
-    height: 28px;
-    border: 1px solid black;
-    border-radius: 50%;
-  }
-  .abr-wl-button.awl-is-added {
-    background-color: #000;
-  }
-</style> {% endcomment %}
+{% comment %} todo- refactor this {% endcomment %}
 
-{% comment %} page base setupe {% endcomment %}
-{% comment %} <style>
-  .abrwl-page {
-    min-height: 300px;
-  }
-</style> {% endcomment %}
-
-
-{% comment %} base styling in separate css {% endcomment %}
-
-<button type="button" class="abr-wl-button" abr-wl-button data-product-id="{{ product.id }}"></button>
+{{ 'abrwl-styles.css' | asset_url | stylesheet_tag }}
 
 {% comment %} todo - add aria-label {% endcomment %}
 
