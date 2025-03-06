@@ -58,6 +58,9 @@
         const response = await fetch(`${this.apiEndpoint}`, {
           method: "GET",
           credentials: "same-origin",
+          headers: {
+             "ngrok-skip-browser-warning": "true"
+          },
         });
         if (response.ok) {
           const data = await response.json();
@@ -85,6 +88,7 @@
             credentials: "same-origin",
             headers: {
               "Content-Type": "application/json",
+               "ngrok-skip-browser-warning": "true"
             },
             body: JSON.stringify({ listId }),
           }

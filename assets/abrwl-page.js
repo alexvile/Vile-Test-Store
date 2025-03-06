@@ -22,6 +22,9 @@
         const response = await fetch(`${this.apiEndpoint}/list/${id}`, {
           method: "GET",
           credentials: "same-origin",
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
         });
         if (response.ok) {
           const { data } = await response.json();
