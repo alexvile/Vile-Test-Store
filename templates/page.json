@@ -15,9 +15,14 @@
         "padding_top": 28,
         "padding_bottom": 28
       }
+    },
+    "abrwl_page_DRXUyC": {
+      "type": "abrwl-page",
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "abrwl_page_DRXUyC"
   ]
 }

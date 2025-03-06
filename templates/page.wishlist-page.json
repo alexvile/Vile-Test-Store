@@ -17,6 +17,10 @@
         "padding_bottom": 28
       }
     },
+    "abrwl-page": {
+      "type": "abrwl-page",
+      "settings": {}
+    },
     "173704397676a46461": {
       "type": "apps",
       "blocks": {
@@ -35,6 +39,7 @@
   },
   "order": [
     "main",
+    "abrwl-page",
     "173704397676a46461"
   ]
 }
