@@ -54,6 +54,12 @@
           "settings": {
             "share_label": "Share"
           }
+        },
+        "swishlist_simple_wishlist_wishlist_product_button_PXFzMX": {
+          "type": "shopify://apps/swishlist-simple-wishlist/blocks/wishlist_product_button/bfcb80f2-f00d-42ae-909a-9f00c726327b",
+          "settings": {
+            "custom_liquid": ""
+          }
         }
       },
       "block_order": [
@@ -64,7 +70,8 @@
         "quantity_selector",
         "buy_buttons",
         "description",
-        "share"
+        "share",
+        "swishlist_simple_wishlist_wishlist_product_button_PXFzMX"
       ],
       "settings": {
         "enable_sticky_info": true,
