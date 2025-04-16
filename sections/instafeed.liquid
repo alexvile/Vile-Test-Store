@@ -1,0 +1,31 @@
+
+Instafeed
+
+{% assign feed = shop.metafields.abrio_instagram.feed.value %}
+
+{% if feed.size > 0 %}
+  <ul class="instagram-feed">
+    {% for post in feed %}
+      <li class="instagram-post">
+        <img src="{{ post.media_url }}" alt="{{ post.caption | escape }}" loading="lazy" />
+        <p>{{ post.caption }}</p>
+        <a href="{{ post.permalink }}" target="_blank">To the post</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Наразі немає публікацій 😔</p>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "Instafeed",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Instafeed"
+    }
+  ]
+}
+{% endschema %}
