@@ -2,10 +2,50 @@
 
 {% assign feed = shop.metafields.abrio_instagram.feed.value %}
 {% assign max_posts = section.settings.max_posts | default: feed.size %}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
 
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
 {% comment %} aspect ratios - mobile and desktop {% endcomment %}
 {% comment %} preload for slow internet {% endcomment %}
-<div class="instafeed__wrapper page-width">
+{% comment %} placeholders? {% endcomment %}
+{% comment %} text block {% endcomment %}
+{% comment %} section padding {% endcomment %}
+{% comment %} max-width for text ?{% endcomment %}
+<div class="section-{{ section.id }}-padding instafeed__wrapper page-width{% if section.settings.show_aside_at_dt %} instafeed__aside-text{% endif %}">
+  {% if section.settings.heading != blank
+    or section.settings.description != blank
+    or section.settings.link_label != blank
+  %}
+    <div class="instafeed__text">
+      {%- if section.settings.heading != blank -%}
+        <h2>{{- section.settings.heading -}}</h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <div>
+          {{- section.settings.description -}}
+        </div>
+      {%- endif -%}
+      {% if section.settings.link_label != blank and section.settings.link_to_account != blank %}
+        <a
+          href="{{ section.settings.link_to_account | escape }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ section.settings.link_label }}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
   {% if feed.size > 0 %}
     <ul
       class="instafeed__list"
@@ -15,9 +55,6 @@
       "
     >
       {% for post in feed limit: max_posts %}
-        <script>
-          console.log({{ post | json }})
-        </script>
         <li class="instafeed__post{% if section.settings.rounded_corners %} rounded-corners{% endif %}">
           {% capture link_in_post_media %}
             {%- if section.settings.post_link == 'post' -%}
@@ -39,10 +76,18 @@
             {% when 'VIDEO' %}
               <div class="media-wrapper media-wrapper--video">
                 <video
-                  {% if section.settings.video_autoplay %}autoplay{% endif %}
-                  {% if section.settings.video_playsinline %}playsinline{% endif %}
-                  {% if section.settings.video_controls %}controls{% endif %}
-                  {% if section.settings.video_loop %}loop{% endif %}
+                  {% if section.settings.video_autoplay %}
+                    autoplay
+                  {% endif %}
+                  {% if section.settings.video_playsinline %}
+                    playsinline
+                  {% endif %}
+                  {% if section.settings.video_controls %}
+                    controls
+                  {% endif %}
+                  {% if section.settings.video_loop %}
+                    loop
+                  {% endif %}
                   muted
                   {% if post.thumbnail_url != blank %}
                     poster="{{ post.thumbnail_url }}"
@@ -113,6 +158,7 @@
 {% schema %}
 {
   "name": "Instafeed",
+  "tag": "section",
   "settings": [
     {
       "type": "header",
@@ -142,6 +188,12 @@
       "default": "Discover on instagram"
     },
     {
+      "type": "checkbox",
+      "id": "show_aside_at_dt",
+      "label": "Show aside (desktop)",
+      "default": false
+    },
+    {
       "type": "header",
       "content": "Main settings"
     },
@@ -155,6 +207,12 @@
       "default": 8
     },
     {
+      "type": "checkbox",
+      "id": "show_caption",
+      "label": "Show caption",
+      "default": false
+    },
+    {
       "type": "select",
       "id": "date_format",
       "label": "Date format",
@@ -165,12 +223,6 @@
         { "value": "%B %d", "label": "Month Day" }
       ],
       "default": "%d.%m.%Y"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_caption",
-      "label": "Show caption",
-      "default": false
     },
     {
       "type": "select",
@@ -192,7 +244,7 @@
     },
     {
       "type": "header",
-      "content": "Video settings",
+      "content": "Video settings"
     },
     {
       "type": "checkbox",
@@ -241,6 +293,30 @@
         { "value": "4", "label": "4" }
       ],
       "default": "3"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
     }
   ],
   "presets": [

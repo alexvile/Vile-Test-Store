@@ -162,3 +162,11 @@
     line-height: 1.4;
   }
 }
+@media screen and (min-width: 750px) {
+  .instafeed__wrapper.instafeed__aside-text {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 20px;
+    align-items: center;
+  }
+}
