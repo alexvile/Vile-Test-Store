@@ -1,27 +1,248 @@
-
-Instafeed
+{{ 'instafeed.css' | asset_url | stylesheet_tag }}
 
 {% assign feed = shop.metafields.abrio_instagram.feed.value %}
+{% assign max_posts = section.settings.max_posts | default: feed.size %}
 
-{% if feed.size > 0 %}
-  <ul class="instagram-feed">
-    {% for post in feed %}
-      <li class="instagram-post">
-        <img src="{{ post.media_url }}" alt="{{ post.caption | escape }}" loading="lazy" />
-        <p>{{ post.caption }}</p>
-        <a href="{{ post.permalink }}" target="_blank">To the post</a>
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>Наразі немає публікацій 😔</p>
-{% endif %}
+{% comment %} aspect ratios - mobile and desktop {% endcomment %}
+{% comment %} preload for slow internet {% endcomment %}
+<div class="instafeed__wrapper page-width">
+  {% if feed.size > 0 %}
+    <ul
+      class="instafeed__list"
+      style="
+        --mobile-cols: {{ section.settings.mobile_columns }};
+        --desktop-cols: {{ section.settings.desktop_columns }};
+      "
+    >
+      {% for post in feed limit: max_posts %}
+        <script>
+          console.log({{ post | json }})
+        </script>
+        <li class="instafeed__post{% if section.settings.rounded_corners %} rounded-corners{% endif %}">
+          {% capture link_in_post_media %}
+            {%- if section.settings.post_link == 'post' -%}
+              <a class="direct-link" href="{{ post.permalink }}" target="_blank"></a>
+              <div class="link-overlay"></div>
+            {%- endif -%}
+          {% endcapture %}
+          {% case post.media_type %}
+            {% when 'IMAGE' %}
+              <div class="media-wrapper media-wrapper--image">
+                <img
+                  src="{{ post.media_url }}"
+                  alt="{{ post.caption | escape }}"
+                  loading="lazy"
+                >
+                {{- link_in_post_media -}}
+              </div>
 
+            {% when 'VIDEO' %}
+              <div class="media-wrapper media-wrapper--video">
+                <video
+                  {% if section.settings.video_autoplay %}autoplay{% endif %}
+                  {% if section.settings.video_playsinline %}playsinline{% endif %}
+                  {% if section.settings.video_controls %}controls{% endif %}
+                  {% if section.settings.video_loop %}loop{% endif %}
+                  muted
+                  {% if post.thumbnail_url != blank %}
+                    poster="{{ post.thumbnail_url }}"
+                  {% endif %}
+                >
+                  <source src="{{ post.media_url }}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+                {{- link_in_post_media -}}
+              </div>
+
+            {% when 'CAROUSEL_ALBUM' %}
+              <div class="media-wrapper carousel-icon">
+                <img src="{{ post.media_url }}" alt="{{ post.caption | escape }}" loading="lazy">
+                <span class="carousel-indicator">
+                  {{- 'icon-instafeed-carousel.svg' | inline_asset_content -}}
+                </span>
+                {{- link_in_post_media -}}
+              </div>
+
+            {% else %}
+              <p>Unknown content type</p>
+          {%- endcase -%}
+          {%- if section.settings.show_caption -%}
+            <p class="caption">{{- post.caption -}}</p>
+          {%- endif -%}
+          {% if section.settings.date_format != 'none' or section.settings.post_link == 'link' %}
+            <div class="instafeed__post-meta">
+              {%- unless section.settings.date_format == 'none' -%}
+                <small class="timestamp">
+                  {{ post.timestamp | date: section.settings.date_format }}
+                </small>
+              {%- endunless -%}
+              {%- if section.settings.post_link == 'link' -%}
+                <a class="direct-link" href="{{ post.permalink }}" target="_blank">Go to the post</a>
+              {%- endif -%}
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="no-posts-wrapper">
+      <div class="placeholder">
+        <svg width="64" height="64" fill="none" stroke="#ccc" stroke-width="1.5">
+          <rect x="8" y="8" width="48" height="48" rx="8" stroke-dasharray="4 2"/>
+          <line x1="8" y1="8" x2="56" y2="56" />
+          <line x1="56" y1="8" x2="8" y2="56" />
+        </svg>
+        <p>No Instagram posts yet. When you add some, they’ll appear here ✨</p>
+      </div>
+    </div>
+    <p>Наразі немає публікацій 😔</p>
+    {% comment %}
+      <ul class="instagram-feed placeholders">
+        {% for i in (1..6) %}
+          <li class="instagram-post placeholder">
+            <div class="media-wrapper placeholder-media"></div>
+            <p class="caption placeholder-text"></p>
+            <small class="timestamp placeholder-text"></small>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endcomment %}
+  {% endif %}
+</div>
 
 {% schema %}
 {
   "name": "Instafeed",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text section"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "This is a placeholder for a headline"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>"
+    },
+    {
+      "type": "url",
+      "id": "link_to_account",
+      "label": "Link to IG account"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Discover on instagram"
+    },
+    {
+      "type": "header",
+      "content": "Main settings"
+    },
+    {
+      "type": "range",
+      "id": "max_posts",
+      "label": "Max posts to show",
+      "min": 1,
+      "max": 24,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "date_format",
+      "label": "Date format",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "%d.%m.%Y", "label": "DD.MM.YYYY" },
+        { "value": "%d %B %Y", "label": "Day Month Year" },
+        { "value": "%B %d", "label": "Month Day" }
+      ],
+      "default": "%d.%m.%Y"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption",
+      "label": "Show caption",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "post_link",
+      "label": "Link to post",
+      "info": "When you select the 'Post media' option, the controls on the video will be unavailable",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "post", "label": "Post media" },
+        { "value": "link", "label": "Link under the post" }
+      ],
+      "default": "post"
+    },
+    {
+      "type": "checkbox",
+      "id": "rounded_corners",
+      "label": "Rounded corners",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Video settings",
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay video",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Show video controls (play, volume, etc.)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_playsinline",
+      "label": "Play video inline (prevent fullscreen on mobile)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_loop",
+      "label": "Loop video (replay automatically)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout (columns)"
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Mobile",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "desktop_columns",
+      "label": "Desktop",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    }
+  ],
   "presets": [
     {
       "name": "Instafeed"
