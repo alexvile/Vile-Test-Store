@@ -43,125 +43,126 @@
     grid-template-columns: {{ section.settings.aside_dt_ratio }};
   }
 {%- endstyle -%}
-{% comment %} aspect ratios - mobile and desktop {% endcomment %}
 
-<div class="section-{{ section.id }}-padding instafeed__wrapper page-width{% if section.settings.show_aside_at_dt %} instafeed__aside-text{% endif %}">
-  {% if section.settings.heading != blank
-    or section.settings.description != blank
-    or section.settings.link_label != blank
-  %}
-    <div class="instafeed__text">
-      {%- if section.settings.heading != blank -%}
-        <h2 class="instafeed__heading">{{- section.settings.heading -}}</h2>
-      {%- endif -%}
-      {%- if section.settings.description != blank -%}
-        <div class="instafeed__description">
-          {{- section.settings.description -}}
-        </div>
-      {%- endif -%}
-      {% if section.settings.link_label != blank and section.settings.link_to_account != blank %}
-        <a
-          class="button"
-          href="{{ section.settings.link_to_account | escape }}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {{ section.settings.link_label }}
-        </a>
-      {% endif %}
-    </div>
-  {% endif %}
-  {% if feed.size > 0 %}
-    <ul class="instafeed__list">
-      {% for post in feed limit: max_posts %}
-        <li class="instafeed__post{% if section.settings.rounded_corners %} rounded-corners{% endif %}">
-          {% capture link_in_post_media %}
+<div class="color-{{ section.settings.color_scheme }} isolate gradient">
+  <div class="section-{{ section.id }}-padding instafeed__wrapper page-width{% if section.settings.show_aside_at_dt %} instafeed__aside-text{% endif %}">
+    {% if section.settings.heading != blank
+      or section.settings.description != blank
+      or section.settings.link_label != blank
+    %}
+      <div class="instafeed__text">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="instafeed__heading">{{- section.settings.heading -}}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <div class="instafeed__description">
+            {{- section.settings.description -}}
+          </div>
+        {%- endif -%}
+        {% if section.settings.link_label != blank and section.settings.link_to_account != blank %}
+          <a
+            class="button"
+            href="{{ section.settings.link_to_account | escape }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ section.settings.link_label }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if feed.size > 0 %}
+      <ul class="instafeed__list">
+        {% for post in feed limit: max_posts %}
+          <li class="instafeed__post{% if section.settings.rounded_corners %} rounded-corners{% endif %}">
+            {% capture link_in_post_media %}
             {%- if section.settings.post_link == 'post' -%}
               <a class="direct-link" href="{{ post.permalink }}" target="_blank"></a>
               <div class="link-overlay"></div>
             {%- endif -%}
           {% endcapture %}
-          {% case post.media_type %}
-            {% when 'IMAGE' %}
-              <div class="media-wrapper media-wrapper--image">
-                <img
-                  src="{{ post.media_url }}"
-                  alt="{{ post.caption | escape }}"
-                  loading="lazy"
-                >
-                {{- link_in_post_media -}}
-              </div>
+            {% case post.media_type %}
+              {% when 'IMAGE' %}
+                <div class="media-wrapper media-wrapper--image">
+                  <img
+                    src="{{ post.media_url }}"
+                    alt="{{ post.caption | escape }}"
+                    loading="lazy"
+                  >
+                  {{- link_in_post_media -}}
+                </div>
 
-            {% when 'VIDEO' %}
-              <div class="media-wrapper media-wrapper--video">
-                <video
-                  {% if section.settings.video_autoplay %}
-                    autoplay
-                  {% endif %}
-                  {% if section.settings.video_playsinline %}
-                    playsinline
-                  {% endif %}
-                  {% if section.settings.video_controls %}
-                    controls
-                  {% endif %}
-                  {% if section.settings.video_loop %}
-                    loop
-                  {% endif %}
-                  muted
-                  {% if post.thumbnail_url != blank %}
-                    poster="{{ post.thumbnail_url }}"
-                  {% endif %}
-                >
-                  <source src="{{ post.media_url }}" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
-                {{- link_in_post_media -}}
-              </div>
+              {% when 'VIDEO' %}
+                <div class="media-wrapper media-wrapper--video">
+                  <video
+                    {% if section.settings.video_autoplay %}
+                      autoplay
+                    {% endif %}
+                    {% if section.settings.video_playsinline %}
+                      playsinline
+                    {% endif %}
+                    {% if section.settings.video_controls %}
+                      controls
+                    {% endif %}
+                    {% if section.settings.video_loop %}
+                      loop
+                    {% endif %}
+                    muted
+                    {% if post.thumbnail_url != blank %}
+                      poster="{{ post.thumbnail_url }}"
+                    {% endif %}
+                  >
+                    <source src="{{ post.media_url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                  {{- link_in_post_media -}}
+                </div>
 
-            {% when 'CAROUSEL_ALBUM' %}
-              <div class="media-wrapper carousel-icon">
-                <img src="{{ post.media_url }}" alt="{{ post.caption | escape }}" loading="lazy">
-                <span class="carousel-indicator">
-                  {{- 'icon-instafeed-carousel.svg' | inline_asset_content -}}
-                </span>
-                {{- link_in_post_media -}}
-              </div>
+              {% when 'CAROUSEL_ALBUM' %}
+                <div class="media-wrapper carousel-icon">
+                  <img src="{{ post.media_url }}" alt="{{ post.caption | escape }}" loading="lazy">
+                  <span class="carousel-indicator">
+                    {{- 'icon-instafeed-carousel.svg' | inline_asset_content -}}
+                  </span>
+                  {{- link_in_post_media -}}
+                </div>
 
-            {% else %}
-              <p>Unknown content type</p>
-          {%- endcase -%}
-          {%- if section.settings.show_caption -%}
-            <p class="caption">{{- post.caption -}}</p>
-          {%- endif -%}
-          {% if section.settings.date_format != 'none' or section.settings.post_link == 'link' %}
-            <div class="instafeed__post-meta">
-              {%- unless section.settings.date_format == 'none' -%}
-                <small class="timestamp">
-                  {{ post.timestamp | date: section.settings.date_format }}
-                </small>
-              {%- endunless -%}
-              {%- if section.settings.post_link == 'link' -%}
-                <a class="direct-link" href="{{ post.permalink }}" target="_blank">Go to the post</a>
-              {%- endif -%}
-            </div>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <div class="instafeed__no-posts">
-      <div class="placeholder">
-        <svg width="64" height="64" fill="none" stroke="#ccc" stroke-width="1.5">
-          <rect x="8" y="8" width="48" height="48" rx="8" stroke-dasharray="4 2"/>
-          <line x1="8" y1="8" x2="56" y2="56" />
-          <line x1="56" y1="8" x2="8" y2="56" />
-        </svg>
-        <p>The Instagram feed is currently unavailable😔.</p>
-        <p>It may take a moment to refresh or load the latest posts.</p>
-        <p>If the issue persists, please contact support.</p>
+              {% else %}
+                <p>Unknown content type</p>
+            {%- endcase -%}
+            {%- if section.settings.show_caption -%}
+              <p class="caption">{{- post.caption -}}</p>
+            {%- endif -%}
+            {% if section.settings.date_format != 'none' or section.settings.post_link == 'link' %}
+              <div class="instafeed__post-meta">
+                {%- unless section.settings.date_format == 'none' -%}
+                  <small class="timestamp">
+                    {{ post.timestamp | date: section.settings.date_format }}
+                  </small>
+                {%- endunless -%}
+                {%- if section.settings.post_link == 'link' -%}
+                  <a class="direct-link" href="{{ post.permalink }}" target="_blank">Go to the post</a>
+                {%- endif -%}
+              </div>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="instafeed__no-posts">
+        <div class="placeholder">
+          <svg width="64" height="64" fill="none" stroke="#ccc" stroke-width="1.5">
+            <rect x="8" y="8" width="48" height="48" rx="8" stroke-dasharray="4 2"/>
+            <line x1="8" y1="8" x2="56" y2="56" />
+            <line x1="56" y1="8" x2="8" y2="56" />
+          </svg>
+          <p>The Instagram feed is currently unavailable😔.</p>
+          <p>It may take a moment to refresh or load the latest posts.</p>
+          <p>If the issue persists, please contact support.</p>
+        </div>
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
 </div>
 
 {% schema %}
@@ -318,6 +319,13 @@
       "id": "rounded_corners",
       "label": "Rounded corners",
       "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info",
+      "default": "scheme-1"
     },
     {
       "type": "header",
