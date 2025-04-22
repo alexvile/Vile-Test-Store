@@ -7,11 +7,23 @@
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
+  .section-{{ section.id }}-padding .instafeed__heading {
+    font-size: {{ section.settings.heading_size | times: 0.6 | round: 0  }}px;
+  }
+  .section-{{ section.id }}-padding .instafeed__description {
+    font-size: {{ section.settings.text_size | times: 0.8 | round: 0  }}px;
+  }
 
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+    .section-{{ section.id }}-padding .instafeed__heading {
+      font-size: {{ section.settings.heading_size }}px;
+    }
+    .section-{{ section.id }}-padding .instafeed__description {
+      font-size: {{ section.settings.text_size }}px;
     }
   }
   .section-{{ section.id }}-padding .instafeed__list {
@@ -26,10 +38,12 @@
     --mb-gap:  {{ section.settings.mb_space_between }}px;
     --dt-gap: {{ section.settings.dt_space_between }}px;
   }
+
+  .section-{{ section.id }}-padding.instafeed__wrapper.instafeed__aside-text {
+    grid-template-columns: {{ section.settings.aside_dt_ratio }};
+  }
 {%- endstyle -%}
 {% comment %} aspect ratios - mobile and desktop {% endcomment %}
-{% comment %} placeholders? {% endcomment %}
-{% comment %} font-sizes  for text {% endcomment %}
 
 <div class="section-{{ section.id }}-padding instafeed__wrapper page-width{% if section.settings.show_aside_at_dt %} instafeed__aside-text{% endif %}">
   {% if section.settings.heading != blank
@@ -38,10 +52,10 @@
   %}
     <div class="instafeed__text">
       {%- if section.settings.heading != blank -%}
-        <h2>{{- section.settings.heading -}}</h2>
+        <h2 class="instafeed__heading">{{- section.settings.heading -}}</h2>
       {%- endif -%}
       {%- if section.settings.description != blank -%}
-        <div>
+        <div class="instafeed__description">
           {{- section.settings.description -}}
         </div>
       {%- endif -%}
@@ -196,6 +210,26 @@
     },
     {
       "type": "range",
+      "id": "heading_size",
+      "min": 12,
+      "max": 92,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 92,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "range",
       "id": "mb_space_between",
       "min": 0,
       "max": 100,
@@ -219,6 +253,22 @@
       "id": "show_aside_at_dt",
       "label": "Show aside (desktop)",
       "default": false
+    },
+    {
+      "type": "select",
+      "id": "aside_dt_ratio",
+      "label": "Aside ratio",
+      "options": [
+        {
+          "value": "2fr 3fr",
+          "label": "40/60"
+        },
+        {
+          "value": "1fr 1fr",
+          "label": "50/50"
+        }
+      ],
+      "default": "2fr 3fr"
     },
     {
       "type": "header",

@@ -54,6 +54,11 @@
     .direct-link {
       z-index: 1;
     }
+  }
+}
+/* hover effect only for desktop */
+@media (hover: hover) and (pointer: fine) {
+  .media-wrapper {
     .direct-link:hover + .link-overlay,
     .direct-link:focus + .link-overlay,
     .direct-link:active + .link-overlay {
@@ -61,6 +66,7 @@
     }
   }
 }
+
 .carousel-indicator {
   color: #fff;
   position: absolute;
@@ -91,11 +97,10 @@
 @media screen and (min-width: 750px) {
   .instafeed__wrapper.instafeed__aside-text {
     display: grid;
-    grid-template-columns: 2fr 3fr;
     gap: var(--dt-gap);
     align-items: center;
   }
-  .instafeed__wrapper:not(.instafeed__aside-text) .instafeed__text{
+  .instafeed__wrapper:not(.instafeed__aside-text) .instafeed__text {
     margin-bottom: var(--dt-gap);
   }
   .instafeed__text {
