@@ -130,28 +130,18 @@
       {% endfor %}
     </ul>
   {% else %}
-    <div class="no-posts-wrapper">
+    <div class="instafeed__no-posts">
       <div class="placeholder">
         <svg width="64" height="64" fill="none" stroke="#ccc" stroke-width="1.5">
           <rect x="8" y="8" width="48" height="48" rx="8" stroke-dasharray="4 2"/>
           <line x1="8" y1="8" x2="56" y2="56" />
           <line x1="56" y1="8" x2="8" y2="56" />
         </svg>
-        <p>No Instagram posts yet. When you add some, they’ll appear here ✨</p>
+        <p>The Instagram feed is currently unavailable😔.</p>
+        <p>It may take a moment to refresh or load the latest posts.</p>
+        <p>If the issue persists, please contact support.</p>
       </div>
     </div>
-    <p>Наразі немає публікацій 😔</p>
-    {% comment %}
-      <ul class="instagram-feed placeholders">
-        {% for i in (1..6) %}
-          <li class="instagram-post placeholder">
-            <div class="media-wrapper placeholder-media"></div>
-            <p class="caption placeholder-text"></p>
-            <small class="timestamp placeholder-text"></small>
-          </li>
-        {% endfor %}
-      </ul>
-    {% endcomment %}
   {% endif %}
 </div>
 

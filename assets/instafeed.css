@@ -170,3 +170,10 @@
     align-items: center;
   }
 }
+
+.instafeed__no-posts > div {
+  padding: 16px;
+  p {
+    margin-top: 0;
+  }
+}
