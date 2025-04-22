@@ -162,12 +162,26 @@
     line-height: 1.4;
   }
 }
+.instafeed__text {
+  text-align: var(--mb-alignment);
+}
+@media screen and (max-width: 749px) {
+  .instafeed__text {
+    margin-bottom: var(--mb-gap);
+  }
+}
 @media screen and (min-width: 750px) {
   .instafeed__wrapper.instafeed__aside-text {
     display: grid;
     grid-template-columns: 2fr 3fr;
-    gap: 20px;
+    gap: var(--dt-gap);
     align-items: center;
+  }
+  .instafeed__wrapper:not(.instafeed__aside-text) .instafeed__text{
+    margin-bottom: var(--dt-gap);
+  }
+  .instafeed__text {
+    text-align: var(--dt-alignment);
   }
 }
 

@@ -14,6 +14,14 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+  .section-{{ section.id }}-padding .instafeed__text {
+    --mb-alignment: {{ section.settings.mb_alignment }};
+    --dt-alignment: {{ section.settings.dt_alignment }};
+  }
+  .section-{{ section.id }}-padding {
+    --mb-gap:  {{ section.settings.mb_space_between }}px;
+    --dt-gap: {{ section.settings.dt_space_between }}px;
+  }
 {%- endstyle -%}
 {% comment %} aspect ratios - mobile and desktop {% endcomment %}
 {% comment %} preload for slow internet {% endcomment %}
@@ -176,6 +184,18 @@
       "id": "link_label",
       "label": "Link label",
       "default": "Discover on instagram"
+    },
+    {
+      "type": "text_alignment",
+      "id": "mb_alignment",
+      "label": "Text alignment (mobile)",
+      "default": "center"
+    },
+    {
+      "type": "text_alignment",
+      "id": "dt_alignment",
+      "label": "Text alignment (desktop)",
+      "default": "center"
     },
     {
       "type": "checkbox",
