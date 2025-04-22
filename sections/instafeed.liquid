@@ -14,6 +14,10 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+  .section-{{ section.id }}-padding .instafeed__list {
+    --mobile-cols: {{ section.settings.mobile_columns }};
+    --desktop-cols: {{ section.settings.desktop_columns }};
+  }
   .section-{{ section.id }}-padding .instafeed__text {
     --mb-alignment: {{ section.settings.mb_alignment }};
     --dt-alignment: {{ section.settings.dt_alignment }};
@@ -24,11 +28,9 @@
   }
 {%- endstyle -%}
 {% comment %} aspect ratios - mobile and desktop {% endcomment %}
-{% comment %} preload for slow internet {% endcomment %}
 {% comment %} placeholders? {% endcomment %}
-{% comment %} text block {% endcomment %}
-{% comment %} section padding {% endcomment %}
-{% comment %} max-width for text ?{% endcomment %}
+{% comment %} font-sizes  for text {% endcomment %}
+
 <div class="section-{{ section.id }}-padding instafeed__wrapper page-width{% if section.settings.show_aside_at_dt %} instafeed__aside-text{% endif %}">
   {% if section.settings.heading != blank
     or section.settings.description != blank
@@ -45,6 +47,7 @@
       {%- endif -%}
       {% if section.settings.link_label != blank and section.settings.link_to_account != blank %}
         <a
+          class="button"
           href="{{ section.settings.link_to_account | escape }}"
           target="_blank"
           rel="noopener noreferrer"
@@ -55,13 +58,7 @@
     </div>
   {% endif %}
   {% if feed.size > 0 %}
-    <ul
-      class="instafeed__list"
-      style="
-        --mobile-cols: {{ section.settings.mobile_columns }};
-        --desktop-cols: {{ section.settings.desktop_columns }};
-      "
-    >
+    <ul class="instafeed__list">
       {% for post in feed limit: max_posts %}
         <li class="instafeed__post{% if section.settings.rounded_corners %} rounded-corners{% endif %}">
           {% capture link_in_post_media %}
@@ -196,6 +193,26 @@
       "id": "dt_alignment",
       "label": "Text alignment (desktop)",
       "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "mb_space_between",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Space between text (mobile)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "dt_space_between",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Space between text (desktop)",
+      "default": 40
     },
     {
       "type": "checkbox",
