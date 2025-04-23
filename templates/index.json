@@ -9,6 +9,37 @@
  */
 {
   "sections": {
+    "instafeed_yXNGdJ": {
+      "type": "instafeed",
+      "settings": {
+        "heading": "This is a placeholder for a headline",
+        "description": "<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>",
+        "link_to_account": "",
+        "link_label": "Discover on instagram",
+        "mb_alignment": "center",
+        "dt_alignment": "center",
+        "heading_size": 30,
+        "text_size": 16,
+        "mb_space_between": 20,
+        "dt_space_between": 40,
+        "show_aside_at_dt": true,
+        "aside_dt_ratio": "2fr 3fr",
+        "max_posts": 8,
+        "show_caption": false,
+        "date_format": "%d.%m.%Y",
+        "post_link": "post",
+        "rounded_corners": false,
+        "color_scheme": "",
+        "video_autoplay": false,
+        "video_controls": false,
+        "video_playsinline": true,
+        "video_loop": true,
+        "mobile_columns": "2",
+        "desktop_columns": "3",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "image_banner_HnCTVT": {
       "type": "image-banner",
       "blocks": {
@@ -64,11 +95,6 @@
         "padding_top": 44,
         "padding_bottom": 36
       }
-    },
-    "instafeed_yXNGdJ": {
-      "type": "instafeed",
-      "name": "Instafeed",
-      "settings": {}
     }
   },
   "order": [
