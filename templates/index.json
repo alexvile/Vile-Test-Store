@@ -28,7 +28,7 @@
         "show_caption": false,
         "date_format": "%d.%m.%Y",
         "post_link": "post",
-        "rounded_corners": false,
+        "rounded_corners": true,
         "color_scheme": "",
         "video_autoplay": false,
         "video_controls": false,
