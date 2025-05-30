@@ -151,11 +151,6 @@
         "type": "shopify://apps/swishlist-simple-wishlist/blocks/wishlist_settings/bfcb80f2-f00d-42ae-909a-9f00c726327b",
         "disabled": false,
         "settings": {}
-      },
-      "16559847531084589941": {
-        "type": "shopify://apps/pareto-volume-discount/blocks/app-embed-block/170ada5d-6ed5-4d40-b93c-1aa195de1ccc",
-        "disabled": false,
-        "settings": {}
       }
     },
     "color_schemes": {
