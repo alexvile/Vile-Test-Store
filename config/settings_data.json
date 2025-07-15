@@ -151,6 +151,16 @@
         "type": "shopify://apps/swishlist-simple-wishlist/blocks/wishlist_settings/bfcb80f2-f00d-42ae-909a-9f00c726327b",
         "disabled": false,
         "settings": {}
+      },
+      "8391292529476041804": {
+        "type": "shopify://apps/min-max-limits-by-limitsify/blocks/limitsify_default/17f09861-7fd3-44b8-af2c-d752652e61ec",
+        "disabled": false,
+        "settings": {}
+      },
+      "1561686393582567663": {
+        "type": "shopify://apps/madgic-order-limit/blocks/limit-purchase/ad83b8ff-f1a1-4eae-9b2a-b6fe28459d93",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
