@@ -9,6 +9,16 @@
  */
 {
   "sections": {
+    "custom_liquid_YpM4Km": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<div class=\"klaviyo-form-SbEcQZ\"></div>",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
     "image_banner_HnCTVT": {
       "type": "image-banner",
       "blocks": {
@@ -121,6 +131,7 @@
     }
   },
   "order": [
+    "custom_liquid_YpM4Km",
     "image_banner_HnCTVT",
     "featured_collection",
     "slideshow_zjVedx"
